@@ -1,0 +1,60 @@
+import React from "react";
+import { View, Text, Platform } from "react-native";
+import { SafeAreaProvider } from "react-native-safe-area-context";
+import { StatusBar } from "expo-status-bar";
+import RootNavigator from "./src/navigation";
+import { PersistQueryClientProvider } from "@tanstack/react-query-persist-client";
+import { queryClient, asyncStoragePersister } from "./src/lib/reactQuery";
+
+class ErrorBoundary extends React.Component<
+  { children: React.ReactNode },
+  { hasError: boolean; error: Error | null }
+> {
+  constructor(props: { children: React.ReactNode }) {
+    super(props);
+    this.state = { hasError: false, error: null };
+  }
+
+  static getDerivedStateFromError(error: Error) {
+    return { hasError: true, error };
+  }
+
+  componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
+    console.error("[ErrorBoundary]", error, errorInfo);
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return (
+        <View style={{ flex: 1, justifyContent: "center", alignItems: "center", padding: 24, backgroundColor: "#FEF2F2" }}>
+          <Text style={{ fontSize: 18, fontWeight: "bold", color: "#DC2626", marginBottom: 12 }}>
+            App Error
+          </Text>
+          <Text style={{ fontSize: 14, color: "#7F1D1D", textAlign: "center" }}>
+            {this.state.error?.message ?? "Unknown error"}
+          </Text>
+          <Text style={{ fontSize: 11, color: "#9CA3AF", marginTop: 12, textAlign: "center" }}>
+            {this.state.error?.stack?.slice(0, 500)}
+          </Text>
+        </View>
+      );
+    }
+    return this.props.children;
+  }
+}
+
+export default function App() {
+  return (
+    <ErrorBoundary>
+      <PersistQueryClientProvider
+        client={queryClient}
+        persistOptions={{ persister: asyncStoragePersister }}
+      >
+        <SafeAreaProvider>
+          <StatusBar style="dark" />
+          <RootNavigator />
+        </SafeAreaProvider>
+      </PersistQueryClientProvider>
+    </ErrorBoundary>
+  );
+}

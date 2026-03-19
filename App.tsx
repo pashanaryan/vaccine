@@ -1,20 +1,15 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import React from "react";
+import { View, Text } from "react-native";
 
 export default function App() {
   return (
-    <View style={styles.container}>
-      <Text>Open up App.tsx to start working on your app!</Text>
-      <StatusBar style="auto" />
+    <View style={{ flex: 1, justifyContent: "center", alignItems: "center", backgroundColor: "#0077B6" }}>
+      <Text style={{ fontSize: 32, fontWeight: "bold", color: "#FFFFFF" }}>
+        VaccineGuard
+      </Text>
+      <Text style={{ fontSize: 16, color: "#E0F0FF", marginTop: 8 }}>
+        Web mode is working!
+      </Text>
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
